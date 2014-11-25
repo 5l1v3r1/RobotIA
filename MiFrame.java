@@ -18,6 +18,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
+import javax.swing.JScrollPane;
 import javax.swing.SpinnerNumberModel;
 
 public class MiFrame extends JFrame {
@@ -34,12 +35,15 @@ public class MiFrame extends JFrame {
 		setSize(new Dimension(800,600));
 		setLocation(new Point(200,200));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		JScrollPane scrollPane = new JScrollPane(drawPanel);
+		add(scrollPane);
 		add(drawPanel, BorderLayout.CENTER);
 		add(buttonPanel, BorderLayout.SOUTH);
 		setVisible(true);
 	}
 
 	public class DrawPanel extends JPanel {
+
 		private TileLayer layer;
 
 		public DrawPanel(int n, int m) {
@@ -58,15 +62,15 @@ public class MiFrame extends JFrame {
 
 		public void DrawLayer(Graphics g){
 
-			double tSdouble = Math.ceil(32 * sca);
-			int tS = (int)tSdouble;
+			int tS = (int)(32 * sca);
+			
 
 			for(int y = 0; y < layer.getMap().length; y++){
 
 				for(int x=0; x < layer.getMap()[y].length; x++){
 
 					if(layer.getMap()[y][x] == TileLayer.Elementos.TERRENO.ordinal()){
-						g.drawImage(new ImageIcon("terreno.jpg").getImage(),x*tS,y*tS,tS,tS,null);
+						g.drawImage(new ImageIcon("img/tierra.png").getImage(),x*tS,y*tS,tS,tS,null);
 					}
 
 					if(layer.getMap()[y][x] == TileLayer.Elementos.OBSTACULO_ARRIBA.ordinal()){
@@ -86,7 +90,7 @@ public class MiFrame extends JFrame {
 					}
 
 					if(layer.getMap()[y][x] == TileLayer.Elementos.OBSTACULO.ordinal()){
-						g.drawImage(new ImageIcon("obstaculo.jpg").getImage(),x*tS,y*tS,tS,tS,null);
+						g.drawImage(new ImageIcon("cocheLlamas.png").getImage(),x*tS,y*tS,tS,tS,null);
 					}
 
 					if(layer.getMap()[y][x] == TileLayer.Elementos.OBS_COR_DW_R.ordinal()){
@@ -119,6 +123,7 @@ public class MiFrame extends JFrame {
 	}
 	
 	public class ButtonPanel extends JPanel implements ActionListener {
+
 		private JLabel etiquetaFilas = new JLabel("Filas");
 		private JLabel etiquetaColumnas = new JLabel("Columnas");
 		private JLabel etiquetaEscala = new JLabel("Escala");
@@ -190,15 +195,16 @@ public class MiFrame extends JFrame {
 		public NewEventoRaton() {
 
 		}
+
 		public void mouseClicked(MouseEvent e) {
 			if((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
-				// TODO Auto-generated method stub
+				
 
 				int i = e.getX(); // Obteneoms la coordena x
 				int j = e.getY(); // Obtenemos la coordena y
 
-				double tSdouble = 32 * sca; //tileSize
-				int tS = (int)tSdouble;
+				int tS = (int)(32 * sca); //tileSize
+				
 
 				switch(buttonPanel.getComboBox().getSelectedIndex()) {
 				case 0:
@@ -236,7 +242,53 @@ public class MiFrame extends JFrame {
 
 
 		//Funciones agregadas por NetBeans, no son necesarias para nuestro caso, pero conviene tenerlas por si las moscas
-		public void mouseDragged(MouseEvent arg0) {}
+		public void mouseDragged(MouseEvent e) {
+
+			if((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
+				
+
+				int i = e.getX(); // Obteneoms la coordena x
+				int j = e.getY(); // Obtenemos la coordena y
+
+				int tS = (int)(32 * sca); //tileSize
+				
+
+				switch(buttonPanel.getComboBox().getSelectedIndex()) {
+				case 0:
+					drawPanel.getLayer().getMap()[j/tS][i/tS] = TileLayer.Elementos.OBSTACULO.ordinal();
+					break;
+				case 1:
+					drawPanel.getLayer().getMap()[j/tS][i/tS] = TileLayer.Elementos.OBSTACULO_ARRIBA.ordinal();
+					break;
+				case 2:
+					drawPanel.getLayer().getMap()[j/tS][i/tS] = TileLayer.Elementos.OBSTACULO_ABAJO.ordinal();
+					break;
+				case 3:
+					drawPanel.getLayer().getMap()[j/tS][i/tS] = TileLayer.Elementos.OBSTACULO_CENTRO.ordinal();
+					break;
+				case 4:
+					drawPanel.getLayer().getMap()[j/tS][i/tS] = TileLayer.Elementos.ROBOT.ordinal();
+					break;
+				case 5:
+					drawPanel.getLayer().getMap()[j/tS][i/tS] = TileLayer.Elementos.TERRENO.ordinal();
+					break;
+				case 6:
+					drawPanel.getLayer().getMap()[j/tS][i/tS] = TileLayer.Elementos.OBS_COR_DW_R.ordinal();
+					break;
+				case 7:
+					drawPanel.getLayer().getMap()[j/tS][i/tS] = TileLayer.Elementos.OBS_COR_DW_L.ordinal();
+					break;
+				case 8:
+					drawPanel.getLayer().getMap()[j/tS][i/tS] = TileLayer.Elementos.OBS_COR_UP_L.ordinal();
+					break;
+				}
+
+				drawPanel.repaint();
+			}
+
+
+
+		}
 		public void mouseMoved(MouseEvent arg0) {}
 		public void mouseEntered(MouseEvent arg0) {}
 		public void mouseExited(MouseEvent arg0) {}
